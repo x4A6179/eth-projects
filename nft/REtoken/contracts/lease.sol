@@ -1,9 +1,10 @@
 pragma solidity ^0.7.0;
 
-import '@openzeppelin/contracts/token/ERC721/presets/ERC721PresetMinterPauserAutoId.sol'
+import '@openzeppelin/contracts/token/ERC721/presets/ERC721Enumerable.sol'
+import '@openzeppelin/contracts/token/ERC721/presets/ERC721Burnable.sol'
 import '@openzeppelin/contracts/access/Ownable.sol'
 
-contract LeaseAgreement is Ownable, ERC721PresetMinterPauserAutoId {
+contract LeaseAgreement is Ownable, ERC721Burnable, ERC721Enumerable {
   // need to include something to hold who (addresses) involved with contract
   mapping(address => bool) private partiesInvolved;
   // constructor to create LeaseAgreement (possible called by manager)
