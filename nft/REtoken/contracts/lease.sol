@@ -4,7 +4,7 @@ pragma solidity ^0.8.0;
 import '@openzeppelin/contracts/token/ERC721/presets/ERC721Enumerable.sol';
 import '@openzeppelin/contracts/access/Ownable.sol';
 import 'openzeppelin/contracts/utils/math/SafeMath.sol';
-import "@openzeppelin/contracts/access/AccessControl.sol";
+import '@openzeppelin/contracts/access/AccessControl.sol';
 
 contract LeaseAgreement is Ownable, ERC721Burnable, ERC721Enumerable {
   // need to include something to hold who (addresses) involved with contract
@@ -18,7 +18,9 @@ contract LeaseAgreement is Ownable, ERC721Burnable, ERC721Enumerable {
 
   // constructor to create LeaseAgreement (possible called by manager)
     // possible
-  constructor (string memory _name, string memory _symbol) ERC721(_name, _symbol) {}
+  constructor (string memory _name, string memory _symbol) ERC721(_name, _symbol) {
+    _setupRole(DEFAULT_ADMIN_ROLE, msg.sender)
+  }
   // function setLeasePrice (called by manager role)
   function setLeasePrice (uint256 _price) external onlyRole(LANDLORD_ROLE) {
     leasePrice = _price;
