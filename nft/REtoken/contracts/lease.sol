@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.0;
 
-import '@openzeppelin/contracts/token/ERC721/presets/ERC721Enumerable.sol';
+import '@openzeppelin/contracts/token/ERC721/ERC721.sol';
 import '@openzeppelin/contracts/access/Ownable.sol';
 import '@openzeppelin/contracts/utils/math/SafeMath.sol';
 import '@openzeppelin/contracts/access/AccessControl.sol';
 
-contract LeaseAgreement is Ownable, ERC721Enumerable {
+contract LeaseAgreement is Ownable, ERC721 {
   // need to include something to hold who (addresses) involved with contract
   using SafeMath for uint256;
 
@@ -36,36 +36,35 @@ contract LeaseAgreement is Ownable, ERC721Enumerable {
     emit priceChange(sharePrice);
   }
 
-  function isInvested (address _address) internal returns (bool status) {
-    require(_address != address(0), "Null Address not allowed in contract"
+  function isInvested (address _address) internal view returns (bool status) {
+    require(_address != address(0), "Null Address not allowed in contract");
     if (invested.length == 0) return false;
     return (invested[investors[_address].index] == _address);
   }
 
   function addInvestor (address _address) external onlyOwner {
-    for (uint256 i = 0; i < investors.length; i++) {
       require(_address != address(0), "Not able to add null address to agreement.");
       require(invested.length < maxInvolved, "Unable to add another address.");
-      require(!isInvested, "Address already invested");
-      investors[_address].index = invested.push(_address) - 1;
+      require(isInvested(_address) == false, "Address already invested");
+      investors[_address].index = invested.length;
+      invested.push(_address);
       investors[_address].daysInvested = investors[_address].daysInvested > 0 ? investors[_address].daysInvested : 0;
       emit LogNewInvestor(_address);
-    }
   }
 
   function removeInvestor (address _address) external onlyOwner {
     require(_address != address(0), "Unable to interact with null address.");
-    require(totalInvolved.length > 0, "Unable to remove. Contract is empty.");
-    if (!isInvested(_address)) throw;
+    require(invested.length > 0, "Unable to remove. Contract is empty.");
+    require(isInvested(_address), "Address not registered in contract.");
     uint256 removedIndex = investors[_address].index;
     address swappedAddr = invested[invested.length - 1];
     invested[removedIndex] = swappedAddr;
-    invested[swappedAddr] = removedIndex
-    invested.length--;
+    investors[swappedAddr].index = removedIndex;
+    invested.pop();
     emit RemovedInvestor(_address);
-
   // function to accept LeaseAgreement (called by manager)
   // function to sign LeaseAgreement (would be called by the signee)
   // revert LeaseAgreement on where conditions arent met (possible test)
   // need off chain calculation to determine days invested
+  }
 }
