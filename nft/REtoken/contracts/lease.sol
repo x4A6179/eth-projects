@@ -10,9 +10,6 @@ contract LeaseAgreement is Ownable, ERC721Enumerable {
   // need to include something to hold who (addresses) involved with contract
   using SafeMath for uint256;
 
-  bytes32 public constant LANDLORD_ROLE = keccak256("LANDLORD_ROLE");
-  bytes32 public constant LEASEE_ROLE = keccak256("INVESTOR_ROLE");
-
   struct Investor {
     uint256 daysInvested;
     uint256 index;
@@ -21,13 +18,14 @@ contract LeaseAgreement is Ownable, ERC721Enumerable {
   mapping(address => Investor) private investors;
   address[] private invested;
 
-  uint256 public maxInvolved = 4;
+  uint256 public constant maxInvolved = 4;
   uint256 public totalSupply = 1;
   uint256 public sharePrice;
 
   //Events to emit to the blockchain whenever there is a change of contract state
-  event LogNewInvestor(address indexed _address)
-  event RemovedInvestor (address indexed _address)
+  event LogNewInvestor(address indexed _address);
+  event RemovedInvestor (address indexed _address);
+  event priceChange (uint256 newPrice);
 
   // constructor to create LeaseAgreement (possible called by manager)
     // possible
@@ -35,6 +33,7 @@ contract LeaseAgreement is Ownable, ERC721Enumerable {
   // function setPrice (called by manager role)
   function setPrice (uint256 _price) external onlyOwner {
     sharePrice = _price;
+    emit priceChange(sharePrice);
   }
 
   function isInvested (address _address) internal returns (bool status) {
@@ -50,7 +49,7 @@ contract LeaseAgreement is Ownable, ERC721Enumerable {
       require(!isInvested, "Address already invested");
       investors[_address].index = invested.push(_address) - 1;
       investors[_address].daysInvested = investors[_address].daysInvested > 0 ? investors[_address].daysInvested : 0;
-      emit LogNewInvestor(_address,);
+      emit LogNewInvestor(_address);
     }
   }
 
@@ -63,7 +62,7 @@ contract LeaseAgreement is Ownable, ERC721Enumerable {
     invested[removedIndex] = swappedAddr;
     invested[swappedAddr] = removedIndex
     invested.length--;
-
+    emit RemovedInvestor(_address);
 
   // function to accept LeaseAgreement (called by manager)
   // function to sign LeaseAgreement (would be called by the signee)
