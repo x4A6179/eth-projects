@@ -8,7 +8,7 @@ pragma solidity ^0.8.0;
 
 import './ERC20.sol'
 
-contact testERC20 is ERC20 {
+contract testERC20 is ERC20 {
 
     mapping(address => uint256) public projectsCreated;
 
