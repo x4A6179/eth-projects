@@ -12,6 +12,9 @@ contract testErc20 is IERC20, Ownable {
   string private _symbol;
   uint256 private _totalSupply = 3000; // creating a token with 3k max supply (no burns)
 
+  event Transfer(address from, address to, uint256 value);
+  event Approve(address owner, address sender, uint256 value);
+
   constructor(string memory name, string memory symbol) {
     _name = name;
     _symbol = symbol;
@@ -33,9 +36,7 @@ contract testErc20 is IERC20, Ownable {
     return _balances[_address];
   }
 
-  function _transfer(address _from, address _to, uint256 amount) internal return (bool) {
-    require(_from == msg.sender);
-    require(_from != address(0), 'Unable to tranfer from zero address.');
+  function _transfer(address _to, uint256 amount) internal return (bool) {
     require(_to != address(0), 'Unable to send zero address. Call burn function instead.');
     require(_balances[_from] >= amount, 'Insufficient funds.');
     _balances[_from] = _balances[_from] - amount;
@@ -44,6 +45,27 @@ contract testErc20 is IERC20, Ownable {
     return true;
   }
 
-  function safeTransferFrom(address _to, uint256 amount) external return ()
-  return _transfer(msg.sender(), _to, amount);
+  function _approve(address _owner, address _spender, uint256 amount) internal {
+    require(_owner != address(0), "Cannot spend on behalf of null address.")
+    require(_spender != address(0), "Null address cannot spend on behalf of another.")
+    _allowances[_owner][_spender] = amount; // this adds to the owner's list of ok addresses & sets spending limit
+    emit Approve(_owner, _spender, amount);
+  }
+
+  function transferFrom(address _from, address _to, uint256 amount) external return (bool) {
+    _transfer(_from, _to, amount);
+    allowedAmount = _allowances[_from][_msgsender()];
+
+    return true;
+  }
+
+  function _burn(address _address, uint256 numTokens) internal onlyOwner {
+    require(_address != address(0), 'Null address cannot mint tokens');
+    uint256 accountBalance = _balances[_address];
+    require(accountBalance >= numTokens, 'Unable to burn more than account balance')
+    unchecked {
+      _balances[_address] = accountBalance - numTokens;
+    }
+    _totalSupply -= numTokens;
+  }
 }
