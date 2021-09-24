@@ -52,10 +52,13 @@ contract testErc20 is IERC20, Ownable {
     emit Approve(_owner, _spender, amount);
   }
 
-  function transferFrom(address _from, address _to, uint256 amount) external return (bool) {
+  function transferFrom(address _sender, address _reciever, uint256 amount) external return (bool) {
     _transfer(_from, _to, amount);
     allowedAmount = _allowances[_from][_msgsender()];
-
+    require(allowedAmount >= amount, "Unable to send more than allowed.");
+    unchecked {
+      _approve(_sender, _msgsender(), amount);
+    }
     return true;
   }
 
