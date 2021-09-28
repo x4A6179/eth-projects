@@ -93,7 +93,7 @@ contract testErc20 is IERC20, Ownable {
     _totalSupply -= numTokens;
   }
 
-  function addAllowance(address _address, uint256 amount) external override returns (bool) {
+  function addAllowance(address _address, uint256 amount) external returns (bool) {
     _approve(msg.sender, _address, _allowances[msg.sender][_address] + amount);
     return true;
   }
