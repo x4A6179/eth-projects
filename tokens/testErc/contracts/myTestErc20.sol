@@ -9,6 +9,7 @@ contract testErc20 is IERC20, Ownable {
   mapping(address => mapping(address => uint256)) private _allowances;
   mapping(address => uint256) private _balances;
 
+  address private _owner;
   string private _name;
   string private _symbol;
   uint256 private _totalSupply = 3000; // creating a token with 3k max supply (no burns)
@@ -18,10 +19,16 @@ contract testErc20 is IERC20, Ownable {
   constructor(string memory n, string memory sym) {
     _name = n;
     _symbol = sym;
+    _owner = msg.sender;              // intializes the owner as the address that deploys the contract
+    _balances[_owner] = _totalSupply; // gives the total # of supply to the owner address
   }
 
   function name() public view returns (string memory) {
     return _name;
+  }
+
+  function owner() public view override returns (address) {
+    return _owner;
   }
 
   function symbol() public view returns (string memory) {
@@ -59,11 +66,11 @@ contract testErc20 is IERC20, Ownable {
     return true;
   }
 
-  function _approve(address _owner, address _spender, uint256 amount) internal {
-    require(_owner != address(0), "Cannot spend on behalf of null address.");
+  function _approve(address _owningAddress, address _spender, uint256 amount) internal {
+    require(_owningAddress != address(0), "Cannot spend on behalf of null address.");
     require(_spender != address(0), "Null address cannot spend on behalf of another.");
-    _allowances[_owner][_spender] = amount; // this adds to the owner's list of ok addresses & sets spending limit
-    emit Approve(_owner, _spender, amount);
+    _allowances[_owningAddress][_spender] = amount; // this adds to the owner's list of ok addresses & sets spending limit
+    emit Approve(_owningAddress, _spender, amount);
   }
 
   function transferFrom(address _sender, address _reciever, uint256 amount) external override returns (bool) {
