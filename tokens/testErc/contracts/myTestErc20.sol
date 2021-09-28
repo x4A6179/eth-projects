@@ -92,4 +92,16 @@ contract testErc20 is IERC20, Ownable {
     }
     _totalSupply -= numTokens;
   }
+
+  function addAllowance(address _address, uint256 amount) external override returns (bool) {
+    _approve(msg.sender, _address, _allowances[msg.sender][_address] + amount);
+  }
+
+  function decreaseAllowance(address _address, uint256 amount) public returns (bool) {
+    uint256 currentAllowance = _allowances[msg.sender][_address];
+    require(currentAllowance >= amount, "Reduced amount would be below zero");
+    unchecked {
+      _approve(msg.sender, _address, _allowances[msg.sender][_address] - amount);
+    }
+  }
 }
