@@ -42,7 +42,7 @@ contract LeaseAgreement is Ownable, ERC721 {
     return (invested[investors[_address].index] == _address);
   }
 
-  function addInvestor (address _address) external onlyOwner {
+  function addInvestor (address _address) external onlyOwner returns (uint256) {
     require(_address != address(0), "Not able to add null address to agreement.");
     require(invested.length < maxInvolved, "Unable to add another address.");
     require(isInvested(_address) == false, "Address already invested");
@@ -50,6 +50,7 @@ contract LeaseAgreement is Ownable, ERC721 {
     invested.push(_address);
     investors[_address].daysInvested = investors[_address].daysInvested > 0 ? investors[_address].daysInvested : 0;
     emit LogNewInvestor(_address);
+    return investors[_address].index;
   }
 
   function removeInvestor (address _address) external onlyOwner {
