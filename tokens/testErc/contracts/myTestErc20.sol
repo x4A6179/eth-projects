@@ -95,6 +95,7 @@ contract testErc20 is IERC20, Ownable {
 
   function addAllowance(address _address, uint256 amount) external override returns (bool) {
     _approve(msg.sender, _address, _allowances[msg.sender][_address] + amount);
+    return true;
   }
 
   function decreaseAllowance(address _address, uint256 amount) public returns (bool) {
@@ -103,5 +104,6 @@ contract testErc20 is IERC20, Ownable {
     unchecked {
       _approve(msg.sender, _address, _allowances[msg.sender][_address] - amount);
     }
+    return true;
   }
 }
