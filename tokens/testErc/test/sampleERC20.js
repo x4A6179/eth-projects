@@ -64,11 +64,33 @@ describe("myTestErc20", function() {
     expect(await testErc20.balanceOf(addr1.address)).to.equal(initRemoteTokens + amount);
   });
 
-  xit("Should revert transaction when amount > token held by address", async function () {
+  it("Should prevent account from transfering more than allowed amount", async function () {
+    const myTestErc20 = await ethers.getContractFactory("testErc20");
+    const testErc20 = await myTestErc20.deploy("DopeMoonToken", "DMT");
+    await testErc20.deployed();
 
+    const [owner, addr1, ...addrs] = await ethers.getSigners();
+
+    initRemoteTokens = await testErc20.balanceOf(addr1.address);
+    amount = 5;
+    await testErc20.connect(owner).addAllowance(addr1.address, amount);
+
+    await expect(testErc20.connect(addr1).transferFrom(owner.address, addr1.address, amount + 1)).to.be.revertedWith("Unable to send more than allowed.");
+    expect(await testErc20.balanceOf(addr1.address)).to.equal(initRemoteTokens);
   });
 
-  xit("Should prevent account from transfering more than allowed amount", async function() {
+  it("Should revert transaction when amount > token held by address", async function() {
+    const myTestErc20 = await ethers.getContractFactory("testErc20");
+    const testErc20 = await myTestErc20.deploy("DopeMoonToken", "DMT");
+    await testErc20.deployed();
 
+    const [owner, addr1, ...addrs] = await ethers.getSigners();
+
+    amount = 5;
+    await testErc20.connect(owner).addAllowance(addr1.address, amount);
+    remoteAllowed = await testErc20.allowance(owner.address, addr1.address);
+    await expect(testErc20.connect(owner).decreaseAllowance(addr1.address, amount + 1)).to.be.revertedWith("Reduced amount would be below zero");
+
+    expect(remoteAllowed).to.equal(amount);
   });
 });
