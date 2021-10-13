@@ -1,0 +1,47 @@
+#quote-box {
+  text-align: center;
+  margin: auto;
+  padding: 40px;
+}
+.quote-text {
+  padding: 10px 5px 5px 5px;
+  color: #FFF;
+}
+
+#quote-box {
+  background: linear-gradient(200deg, rgba(179, 149, 183, 1) 40%, rgba(143, 159, 246, 1) 100%);
+  min-width: 350px;
+  min-height: 150px;
+  border-radius: 10px;
+}
+
+.quote-author {
+  color: #FFF;
+  text-align: right;
+  margin: 30px 30px 25px 30px;
+}
+#new-quote {
+  float: right;
+  position: relative;
+  display: block;
+  color: #FFF;
+  border-radius: 2px;
+  padding: 3px 5px;
+  margin-left: 20px;
+  margin-right: -5px;
+  margin-top: 5px;
+  background-color: transparent;
+}
+
+#new-quote:hover {
+  background-color: grey;
+  color: black;
+}
+
+#tweet-quote {
+  float: left;
+  position: relative;
+  display: block;
+  margin: .5em;
+  font-size: 12px Calibri;
+}

@@ -1,0 +1,94 @@
+.top-bar {
+  width: 100vw;
+  border: 1px dashed white;
+}
+
+.nav-button {
+  color: black;
+  font-size: 18px;
+  float: left;
+  margin-right: 10px;
+  margin-top: 15px;
+  padding-left: 5px;
+  text-decoration: none;
+}
+
+.connect-button:hover {
+  color: silver;
+}
+
+.connect-button, .active-acct {
+  border-radius: 8px;
+  font-size: 14px;
+  border: 1px dashed black;
+  display: block;
+  position: absolute;
+  background-color: #2e2b49;
+  margin-top: 8px;
+  margin-left: 8px;
+  padding: 10px;
+  color: #FFF;
+}
+
+.menu-button {
+  color: #FFF;
+  background-color: #2e2b49;
+  /*background-color: rgb(179, 149, 183);*/
+  margin-top: 15px;
+  margin-right: 25px;
+}
+
+.menu-button:hover {
+  color: silver;
+}
+
+.menu-container {
+  position: relative;
+  float: right;
+}
+
+.menu {
+  background-color: #2e2b49;
+  border-radius: 8px;
+  position: absolute;
+  top: 60px;
+  right: 0;
+  width: 200px;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-20px);
+  transition: opacity 0.4s ease, transform 0.4s ease, visibility 0.4s;
+}
+
+.menu.active {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+  z-index: 2;
+}
+
+.menu ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.menu li {
+  border-bottom: 1px solid black;
+}
+
+
+.menu .active-acct:hover {
+  color: white;
+}
+
+.menu li a {
+  text-decoration: none;
+  display: block;
+  padding: 5px 10px;
+  color: #b3b2b9;
+}
+
+.menu li a:hover {
+  color: white;
+}
