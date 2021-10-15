@@ -7,8 +7,27 @@ This will serve as a personal portfolio to exhibit my journey and experience to 
 pragma solidity ^0.8.0;
 
 contract Experience {
-    function getWeb3Exp(address userAddress) public pure returns (string memory) {
-        return "<1 month";
+    mapping(address => uint256) public experience;
+    
+    constructor() public {
+	owner = msg.sender;
     }
+
+    function getWeb3Exp(address userAddress) public pure returns (string memory) {
+        require(msg.sender == owner);
+	return experience[userAddress]; // returns ~2 months
+    }
+}
+```
+
+```javascript
+const ethers = require('ethers');
+
+async function createInstance = () => {
+
+    const contract = await new ethers.getContractFactory("Experience");
+    const experience = await contract.deploy();
+    await experience.deployed();
+
 }
 ```
