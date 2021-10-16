@@ -13,9 +13,9 @@ contract Experience {
 	owner = msg.sender;
     }
 
-    function getWeb3Exp(address userAddress) public pure returns (string memory) {
+    function getWeb3Exp(address userAddress) public returns (uint256 exp) {
         require(msg.sender == owner);
-	return experience[userAddress]; // returns ~2 months
+	return experience[userAddress]; // returns 2 (months)
     }
 }
 ```
