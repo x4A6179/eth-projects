@@ -1,0 +1,28 @@
+// SPDX-License-Identifier: UNLICENSED
+pragma solidity ^0.8.3;
+
+import "@openzepplin/contracts/utils/Counters.sol";
+import "@openzepplin/contracts/token/ERC721/ERC721URIStorage.sol";
+import "@openzepplin/contracts/token/ERC721/ERC721.sol";
+import "hardhat/console.sol";
+
+// Short contract to mint token
+contract NFT is ERC721URIStorage {
+    using Counters for Counters.Counter;
+    Counters.Counter private _tokenIds;
+    address contractAddress;
+
+    constructor(address marketplaceAddress) ERC721("Nautilus", "NAU") {
+        contractAddress = marketplaceAddress;
+    }
+
+    function makeToken(string memory tokenURI) public retuns (uint256) {
+        _tokenIds.increment();
+        uint256 newItemId = _tokenIds.current();
+
+        _mint(msg.sender, newItemId);
+        _setTokenURI(newItemId, tokenURI);
+        setApprovalforAll(contractAddress, true);
+        return newItemId;
+    }
+}
