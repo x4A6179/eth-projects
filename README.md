@@ -15,7 +15,7 @@ contract Experience {
 
     function getWeb3Exp(address userAddress) public returns (uint256 exp) {
         require(msg.sender == owner);
-	return experience[userAddress]; // returns 2 (months)
+	return experience[userAddress];
     }
 }
 ```
@@ -28,6 +28,8 @@ async function createInstance = () => {
     const contract = await new ethers.getContractFactory("Experience");
     const experience = await contract.deploy();
     await experience.deployed();
-
+    
+    const curExp = await experience.getWeb3Exp();
+    console.log(curExp) // returns 3 (months)
 }
 ```
