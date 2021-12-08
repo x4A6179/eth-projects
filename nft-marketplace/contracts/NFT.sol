@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.3;
 
-import "@openzepplin/contracts/utils/Counters.sol";
-import "@openzepplin/contracts/token/ERC721/ERC721URIStorage.sol";
-import "@openzepplin/contracts/token/ERC721/ERC721.sol";
+import "@openzeppelin/contracts/utils/Counters.sol";
+import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
+import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "hardhat/console.sol";
 
 // Short contract to mint token
@@ -16,13 +16,13 @@ contract NFT is ERC721URIStorage {
         contractAddress = marketplaceAddress;
     }
 
-    function makeToken(string memory tokenURI) public retuns (uint256) {
+    function makeToken(string memory tokenURI) public returns (uint256) {
         _tokenIds.increment();
         uint256 newItemId = _tokenIds.current();
 
         _mint(msg.sender, newItemId);
         _setTokenURI(newItemId, tokenURI);
-        setApprovalforAll(contractAddress, true);
+        setApprovalForAll(contractAddress, true);
         return newItemId;
     }
 }
